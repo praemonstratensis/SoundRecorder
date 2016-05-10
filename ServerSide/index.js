@@ -9,7 +9,10 @@ app.get('/', function (req, res) {
 });
 
 app.post('/sound', upload.single('avatar'), function (req, res, next) {
-    res.end();
+	console.log("Beerkezo file");
+    console.log("Eredeti filenev: " + req.file.originalname);
+    console.log("File merete(KB): " + req.file.size/1000);
+    res.end("Fajl fogadva");
 })
 
 app.listen(3000, function () {
