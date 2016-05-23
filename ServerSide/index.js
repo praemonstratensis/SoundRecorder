@@ -18,19 +18,8 @@ app.get('/', function (req, res) {
     res.send('Hello World!');
 });
 
-app.post('/sound', upload.single('hang'), function (req, res, next) {
+app.post('/recording/upload', upload.single('sound_file'), function (req, res, next) {
     console.log("Beerkezo hangfile");
-    console.log("Eredeti filenev: " + req.file.originalname);
-    console.log("File merete(KB): " + req.file.size/1024);
-
-    fs.rename(req.file.path , __dirname + "/upload/" + req.file.originalname);
-
-    console.log("Fajl fogadva es elmentve a " + __dirname + "/upload/" + req.file.originalname + " helyre.");
-    res.end("Fajl fogadva");
-})
-
-app.post('/picture', upload.single('kep'), function (req, res, next) {
-  console.log("Beerkezo kepfile");
     console.log("Eredeti filenev: " + req.file.originalname);
     console.log("File merete(KB): " + req.file.size/1024);
 
