@@ -30,5 +30,5 @@ app.post('/recording/upload', upload.single('sound_file'), function (req, res, n
 })
 
 app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+    console.log('Server listening on port 3000!');
 });
