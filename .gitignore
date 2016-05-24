@@ -4,3 +4,5 @@ ServerSide/node_modules/
 ServerSide/upload/
 RPiListener/node_modules/
 npm-debug.log
+ServerSide/index.html
+*.png
