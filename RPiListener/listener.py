@@ -22,7 +22,7 @@ def ConfigSectionMap(section):
                         dict1[option] = None
         return dict1
 
-trigPin = 16
+trigPin = 5
 tru = 1
 
 #gpio beallitasa
@@ -33,13 +33,13 @@ record_everything = ConfigSectionMap("listener")['record_everything'] == 'true'
 record_days = map(lambda x: int(x), ConfigSectionMap("listener")['record_days'].split(','))
 record_start = datetime.datetime.strptime(ConfigSectionMap("listener")['record_start'], '%H:%M')
 record_end = datetime.datetime.strptime(ConfigSectionMap("listener")['record_end'], '%H:%M')
+record_in_progress = False
 
 while tru == 1:
         if gpio.input(trigPin) == 0 and not record_in_progress:
                 #bekapcsolt allapot
                 today = datetime.datetime.today().weekday() + 1
                 now = datetime.datetime.now()
-                record_in_progress = False
                 sound_filename = "Elmelkedes_" + time.strftime("%Y_%m_%d_%H_%M_%S") + ".wav"
                 record_script = shlex.split('arecord -Dhw:sndrpiwsp -c 2 -f s16_LE -r 44100')
                 record_script.append(sound_filename)
