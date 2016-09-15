@@ -22,12 +22,12 @@ def ConfigSectionMap(section):
                         dict1[option] = None
         return dict1
 
-trigPin = 4
+trigPin = 5
 tru = 1
 
 #gpio beallitasa
 gpio.setmode(gpio.BCM)
-gpio.setup(trigPin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+gpio.setup(trigPin, gpio.IN)#, pull_up_down=gpio.PUD_DOWN
 upload_url = ConfigSectionMap("uploader")['server_address']
 record_everything = ConfigSectionMap("listener")['record_everything'] == 'true'
 record_days = map(lambda x: int(x), ConfigSectionMap("listener")['record_days'].split(','))
