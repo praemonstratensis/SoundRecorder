@@ -16,3 +16,5 @@ hangtech = leltar.get_worksheet(1)
 a2 = hangtech.acell('A2').value
 
 print a2
+
+hangtech.update_acell('M2', 'haliho')
