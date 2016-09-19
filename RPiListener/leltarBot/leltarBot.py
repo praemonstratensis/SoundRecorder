@@ -24,36 +24,28 @@ kolcson = leltar.get_worksheet(3)
 char = ""
 code = ""
 
-def updateBorrow(row_values):
-	try:
-		row_num = kolcson.find(row_values[1]).row
+def updateBorrow(row_values, happening):
+    if happening == 'back':
+        i = 1
+        lastIdRow = 0
+        #print kolcson.cell(i, 1).value
+        while kolcson.cell(i, 1).value != "":
+            print kolcson.cell(i, 1).value
+            if kolcson.cell(i, 1).value == row_values[0]:
+                lastIdRow = i
+            i += 1
 
-		#ha mar ott van, akkor torles
-		i = 1
-		for cell_value in row_values:
-			kolcson.update_cell(row_num, i, '')
-			++i
+        kolcson.update_cell(lastIdRow, 4, time.strftime("%Y_%m_%d_%H_%M"))
+    else:
+        # ha nincs adatbazisban, a legelso ures sorba iras
+        free_row = 2
+        while kolcson.cell(free_row, 1).value != "":
+            free_row = free_row + 1
 
-		#ha van olyan sor, ami a torolt sor utan van, akkor annak egyel elobbre helyezese
-		while kolcson.cell(row_num + 1, 1).value != '':
-			++row_num
 
-			newrow_values = kolcson.row_values(newrow_values)
-
-			j = 1
-			for cell_value in newrow_values:
-				kolcson.update_cell(row_num-1, j, cell_value)
-				kolcson.update_cell(row_num, j, '')
-
-	except:
-		# ha nincs adatbazisban, a legelso ures sorba iras
-		free_row = 2
-		while kolcson.cell(free_row, 1).value != '':
-			++free_row
-
-		i = 1
-		for cell_value in row_values:
-			kolcson.update_cell(free_row, i, cell_value)
+        kolcson.update_cell(free_row, 1, row_values[0])
+        kolcson.update_cell(free_row, 2, row_values[1])
+        kolcson.update_cell(free_row, 3, time.strftime("%Y_%m_%d_%H_%M"))
 
 while True:
 	char = kb.getch()
@@ -65,22 +57,22 @@ while True:
 			try:
 				cell = fenytech.find(code)
 				#row = fenytech.row_values(cell.row)
-				print time.strftime("%Y_%m_%d_%H_%M_%S")
+				print time.strftime("%Y_%m_%d_%H_%M")
 				print fenytech.cell(cell.row, cell.col+1).value
 
 				agi = fenytech.cell(cell.row, 12).value
 				if agi == "":
 					fenytech.update_cell(cell.row, 12, 'Nem')
-					fenytech.update_cell(cell.row, 13, time.strftime("%Y_%m_%d_%H_%M_%S"))
+					fenytech.update_cell(cell.row, 13, time.strftime("%Y_%m_%d_%H_%M"))
 					fenytech.update_cell(cell.row, 14, '')
 
-					updateBorrow(fenytech.row_values(cell.row))
+					updateBorrow(fenytech.row_values(cell.row), 'out')
 					print "ki"
 				else:
 					fenytech.update_cell(cell.row, 12, '')
-					fenytech.update_cell(cell.row, 14, time.strftime("%Y_%m_%d_%H_%M_%S"))
+					fenytech.update_cell(cell.row, 14, time.strftime("%Y_%m_%d_%H_%M"))
 
-					updateBorrow(fenytech.row_values(cell.row))
+					updateBorrow(fenytech.row_values(cell.row), 'back')
 					print "vissza"
 			except:
 				print "Rossz leltari szam, code reset"
@@ -88,22 +80,22 @@ while True:
 		elif "HE" in code:
 			try:
 				cell = hangtech.find(code)
-				print time.strftime("%Y_%m_%d_%H_%M_%S")
+				print time.strftime("%Y_%m_%d_%H_%M")
 				print hangtech.cell(cell.row, cell.col+1).value
 
 				agi = hangtech.cell(cell.row, 13).value
 				if agi == "":
 					hangtech.update_cell(cell.row, 13, 'Nem')
-					hangtech.update_cell(cell.row, 14, time.strftime("%Y_%m_%d_%H_%M_%S"))
+					hangtech.update_cell(cell.row, 14, time.strftime("%Y_%m_%d_%H_%M"))
 					hangtech.update_cell(cell.row, 15, '')
 
-					updateBorrow(hangtech.row_values(cell.row))
+					updateBorrow(hangtech.row_values(cell.row), 'out')
 					print "ki"
 				else:
 					hangtech.update_cell(cell.row, 13, '')
-					hangtech.update_cell(cell.row, 15, time.strftime("%Y_%m_%d_%H_%M_%S"))
+					hangtech.update_cell(cell.row, 15, time.strftime("%Y_%m_%d_%H_%M"))
 
-					updateBorrow(hangtech.row_values(cell.row))
+					updateBorrow(hangtech.row_values(cell.row), 'back')
 					print "vissza"
 			except:
 				print "Rossz leltari szam, code reset"
@@ -112,22 +104,22 @@ while True:
 		elif "K" in code or "A" in code:
 			try:
 				cell = kabel.find(code)
-				print time.strftime("%Y_%m_%d_%H_%M_%S")
+				print time.strftime("%Y_%m_%d_%H_%M")
 				print kabel.cell(cell.row, cell.col+1).value
 
 				agi = kabel.cell(cell.row, 10).value
 				if agi == "":
 					kabel.update_cell(cell.row, 10, 'Nem')
-					kabel.update_cell(cell.row, 11, time.strftime("%Y_%m_%d_%H_%M_%S"))
+					kabel.update_cell(cell.row, 11, time.strftime("%Y_%m_%d_%H_%M"))
 					kabel.update_cell(cell.row, 12, '')
 
-					updateBorrow(kabel.row_values(cell.row))
+					updateBorrow(kabel.row_values(cell.row), 'out')
 					print "ki"
 				else:
 					kabel.update_cell(cell.row, 10, '')
-					kabel.update_cell(cell.row, 12, time.strftime("%Y_%m_%d_%H_%M_%S"))
+					kabel.update_cell(cell.row, 12, time.strftime("%Y_%m_%d_%H_%M"))
 					
-					updateBorrow(kabel.row_values(cell.row))
+					updateBorrow(kabel.row_values(cell.row), 'back')
 					print "vissza"
 			except:
 				print "Rossz leltari szam, code reset"
