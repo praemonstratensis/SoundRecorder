@@ -29,19 +29,23 @@ class keypad_module:
 
   # get a keystroke from the keypad
   def getch(self):
-    while 1:
-      for col in range(0,4):
+    was = False
+    for col in range(0,4):
         time.sleep(0.01)
         self.i2c.write_byte_data(self.I2CADDR, self.OLATA+self.port, self.KEYCOL[col]) # write 0 to lowest four bits
         key = self.i2c.read_byte_data(self.I2CADDR, self.GPIOA+self.port) >> 4
         if (key) != 0b1111:
-          row = self.DECODE[key]
-          while (self.i2c.read_byte_data(self.I2CADDR, self.GPIOA+self.port) >> 4) != 15:
-            time.sleep(0.01)
-          if self.UPSIDEDOWN == 0:
+            row = self.DECODE[key]
+            while (self.i2c.read_byte_data(self.I2CADDR, self.GPIOA+self.port) >> 4) != 15:
+                time.sleep(0.01)
+            was = True
+
+        if self.UPSIDEDOWN == 0 and was:
             return self.KEYCODE[col][row] # keypad right side up
-          else:
+        elif self.UPSIDEDOWN != 0 and was:
             return self.KEYCODE[3-row][3-col] # keypad upside down
+    if not was:
+        return ""
 
   # initialize the keypad class
   def __init__(self,addr,ioport,upside):
