@@ -1,5 +1,7 @@
 const express = require('express')
 const multer  = require('multer')
+const config  = require('./config.json')
+const path  = require('path')
 const upload = multer({ dest: 'upload/' })
 const fs = require('fs');
 
@@ -23,12 +25,14 @@ app.post('/recording/upload', upload.single('sound_file'), function (req, res, n
     console.log("Eredeti filenev: " + req.file.originalname);
     console.log("File merete(KB): " + req.file.size/1024);
 
-    fs.rename(req.file.path , __dirname + "/upload/" + req.file.originalname);
+    var destinationPath = path.normalize(config.upload_dir) + path.sep + req.file.originalname;
 
-    console.log("Fajl fogadva es elmentve a " + __dirname + "/upload/" + req.file.originalname + " helyre.");
+    fs.rename(req.file.path, destinationPath);
+
+    console.log("Fajl fogadva es elmentve a " + destinationPath + " helyre.");
     res.end("Fajl fogadva");
 })
 
-app.listen(3000, function () {
-    console.log('Server listening on port 3000!');
+app.listen(config.port, function () {
+    console.log('Server listening on port '+ config.port +'!');
 });
