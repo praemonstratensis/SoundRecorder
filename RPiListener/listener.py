@@ -70,21 +70,30 @@ while True:
                         record_in_progress = False
 
                         sound_filename_mp3 = sound_filename + ".mp3"
-                        convert_script = shlex.split("ffmpeg -i ")
-                        convert_script.append(sound_filename_wav)
-                        convert_script.append(" -acodec libmp3lame ")
-                        convert_script.append(sound_filename_mp3)
+                        sound_filename_mp3_tiszta = sound_filename + "_zajszurt.mp3"
 
-                        subprocess.Popen(convert_script)
+                        convert_script = "ffmpeg -i " + sound_filename_wav + " -acodec libmp3lame " + sound_filename_mp3
+                        #os.system(convert_script)
 
-                        rm_wav_script = shlex.split("rm")
-                        rm_wav_script.append(sound_filename_wav)
+                        norm_command = "sox --norm " + sound_filename_wav + " " + sound_filename_mp3
+                        os.system(norm_command)
 
-                        subprocess.Popen(rm_wav_script) 
+                        noise_command_part1 = "sox "  + sound_filename_mp3 +" -n trim 0 1.5 noiseprof speech.noise-profil"
+                        #os.system(noise_command_part1)
 
-                        files = {'sound_file': open(sound_filename_wav, 'rb')}
+                        noise_command_part2 = "sox " + sound_filename_mp3 + " " + sound_filename_mp3_tiszta + " noisered speech.noise-profile 0"
+                        #os.system(noise_command_part2)
+
+                        rm_wav_script = "rm " + sound_filename_wav
+                        os.system(rm_wav_script)
+
+                        files = {'sound_file': open(sound_filename_mp3, 'rb')}
                         response = requests.post(upload_url, files=files)
                         print response.text
+
+                        #files = {'sound_file': open(sound_filename_mp3_tiszta, 'rb')}
+                        #response = requests.post(upload_url, files=files)
+                        #print response.text
 
                 print "A hangositas kikapcsolt, hang felveve es feltoltve a szerverre.\n"
 
