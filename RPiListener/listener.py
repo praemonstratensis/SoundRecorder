@@ -78,18 +78,25 @@ while True:
                         norm_command = "sox --norm " + sound_filename_wav + " " + sound_filename_mp3
                         os.system(norm_command)
 
-                        noise_command_part1 = "sox "  + sound_filename_mp3 +" -n trim 0 1.5 noiseprof speech.noise-profil"
-                        #os.system(noise_command_part1)
+                        noise_command_part1 = "sox "  + sound_filename_mp3 +" -n trim 0 1.5 noiseprof noise.prof"
+                        noise_command_part2 = "sox " + sound_filename_mp3 + " " + sound_filename_mp3_tiszta + " noisered noise.prof 0.21"
 
-                        noise_command_part2 = "sox " + sound_filename_mp3 + " " + sound_filename_mp3_tiszta + " noisered speech.noise-profile 0"
-                        #os.system(noise_command_part2)
+                        try:
+                                os.system(noise_command_part1)
+                                os.system(noise_command_part2)
 
-                        rm_wav_script = "rm " + sound_filename_wav
-                        os.system(rm_wav_script)
+                                files = {'sound_file': open(sound_filename_mp3_tiszta, 'rb')}
+                                response = requests.post(upload_url, files=files)
+                                print response.text
+                        except:
+                                print "no noisefilter"
+        
+                                files = {'sound_file': open(sound_filename_mp3, 'rb')}
+                                response = requests.post(upload_url, files=files)
+                                print response.text
 
-                        files = {'sound_file': open(sound_filename_mp3, 'rb')}
-                        response = requests.post(upload_url, files=files)
-                        print response.text
+                                rm_wav_script = "rm " + sound_filename_wav
+                                os.system(rm_wav_script)
 
                         #files = {'sound_file': open(sound_filename_mp3_tiszta, 'rb')}
                         #response = requests.post(upload_url, files=files)
